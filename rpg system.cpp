@@ -16,22 +16,25 @@ int enemy_speed[2] = {5, 5};
 int enemy_health[2] = {30, 30};
 
 //aditional initializations as to not repeat them in the loop
-bool gamestatehealth = true, pturn, eturn, has_defended, has_speed = true, has_axe = true, has_potion = true;
+bool gamestatehealth, pturn, eturn, has_defended, has_speed = true, has_axe = true, has_potion = true;
 
 // this will be used later to determine wether the game is over or not
-int gamestate() {
+void gamestate() {
     //if enemy health is zero, the game will end
     if (enemy_health[1] <= 0) {
-        return 0;
+        cout << "You have defeated the enemy!\n";
+        gamestatehealth = false;
     }
     else {
         //if player health is also zero, the game will end as well
         if (players_health[1] <= 0) {
-            return 0;
+            cout << "The enemy has defeated you...\n";
+            cout << "Game over!\n";
+            gamestatehealth = false;
         }
         //else, the game continues
         else {
-            return 1;
+            gamestatehealth = true;
         }
     }
 }
@@ -139,22 +142,33 @@ int main() //first loop to keep the game going as long as at least one of them h
         string input, ch;
         int turnorder = order();
         if (turnorder == 1) {
+            cout << "\n";
             cout << "Your turn!\n";
+            cout << "\n";
             pturn = true;
             eturn = false;
         }
         else
         {
+            cout << "\n";
             cout << "Enemy's turn!\n";
+            cout << "\n";
             pturn = false;
             eturn = true;
         }
         while (pturn == true) {
             cout << "You have the following actions: \n";
-            
+            cout << "attack\n";
+            cout << "defend\n";
+            cout << "items (view)\n";
+            cout << "Type the action to perform it\n";
+            cout << "\n";
             cin >> input;
+            cout << "\n";
             switch (input[0]) {
                 case 'a': {
+                    cout << "You rush in to attack!\n";
+                    cout << "\n";
                     int roll = diceroll();
                     int dmg = attack();
                     if (roll == 20) {
@@ -166,6 +180,9 @@ int main() //first loop to keep the game going as long as at least one of them h
                             cout << "critical failure! attack missed\n";
                             dmg = 0;
                         }
+                    if (enemy_health[1] < 0) {
+                        enemy_health[1] = 0;
+                    }
                     enemy_health[1] = enemy_health[1] - dmg;
                     cout << "enemy has " << enemy_health[1] << "/" << enemy_health[0] << "hp remaining\n";
                     pturn = false;
@@ -236,6 +253,7 @@ int main() //first loop to keep the game going as long as at least one of them h
             }
         }
         while (eturn == true) {
+            cout << "The enemy rushes in to attack!\n";
             int roll = diceroll();
             int dmg = eattack();
             if (roll == 20) {
@@ -248,14 +266,12 @@ int main() //first loop to keep the game going as long as at least one of them h
                     dmg = 0;
                 }
             players_health[1] = players_health[1] - dmg;
+            if (players_health[1] < 0) {
+                players_health[1] = 0;
+            }
             cout << "You have " << players_health[1] << "/" << players_health[0] << "hp remaining\n";
             eturn = false;
         }
-        if (gamestate() == 1) {
-            gamestatehealth = true;
-        }
-        else {
-            gamestatehealth = false;
-        }
+        gamestate();
     } while (gamestatehealth == true);
 }
