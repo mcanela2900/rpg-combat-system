@@ -15,6 +15,9 @@ int enemy_defense[2] = {8, 8};
 int enemy_speed[2] = {5, 5};
 int enemy_health[2] = {30, 30};
 
+//aditional initializations as to not repeat them in the loop
+bool gamestatehealth = true, pturn, eturn, has_defended;
+
 // this will be used later to determine wether the game is over or not
 int gamestate() {
     //if enemy health is zero, the game will end
@@ -42,7 +45,6 @@ int diceroll() {
 
 int attack()
 {
-    // this is the equation for damage from the player to the enemy
     int dmg = rand() % players_attack[1] + 1;
 
     return dmg;
@@ -52,6 +54,16 @@ int eattack()
 {
     //this is the equation for damage from the enemy to the player
     int dmg = rand() % enemy_attack[1] + 1;
+    
+    if (has_defended) {
+        dmg -= rand() % players_defense[1] + 1; // decrease damage by half if player defended
+        has_defended = false; // reset has_defended for next turn
+    }
+    
+    if (dmg < 0) {
+        dmg = 0;
+        cout << "Enemy's attack was successfully parried\n";
+    }
     
     return dmg;
 }
@@ -73,8 +85,7 @@ int order() {
         return 0;
     }
 }
-//aditional initializations as to not repeat them in the loop
-bool gamestatehealth = true, pturn, eturn;
+
 int main() //first loop to keep the game going as long as at least one of them hits 0hp
 {
     srand(time(NULL));
@@ -107,6 +118,18 @@ int main() //first loop to keep the game going as long as at least one of them h
                         }
                     enemy_health[1] = enemy_health[1] - dmg;
                     cout << "enemy has " << enemy_health[1] << "/" << enemy_health[0] << "hp remaining\n";
+                    pturn = false;
+                    break;
+                }
+                 case 'd': {
+                    if (has_defended) {
+                        cout << "You have already defended this turn.\n";
+                        pturn = true;
+                        break;
+                    }
+                    players_defense[1] += 2; // increase defense by 2 for the rest of the turn
+                    cout << "You prepare to defend.\n";
+                    has_defended = true;
                     pturn = false;
                     break;
                 }
