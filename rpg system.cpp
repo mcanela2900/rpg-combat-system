@@ -18,7 +18,7 @@ int enemy_health[2] = { 30, 30 };
 
 //aditional initializations as to not repeat them in the loop
 bool gamestatehealth, pturn, eturn, has_defended = false, ehas_defended = false, has_speed = true, has_axe = true, has_potion = true;
-
+// adds color to the console
 void ChangeColor(char color)
 {
     switch (color)
@@ -77,6 +77,7 @@ int diceroll() {
 
 int attack()
 {
+    //this is the equation for damage from the player to the enemy
     int dmg = rand() % players_attack[1] + 1;
     int roll = diceroll();
     if (roll == 20) {
@@ -157,7 +158,7 @@ void speed_potion()
     ChangeColor('e');
     cout << "You feel energized by the effect of the speed potion \n";
     ChangeColor('3');
-    cout<<" + 2 speed \n";
+    cout << " + 2 speed \n";
 
 }
 
@@ -174,7 +175,7 @@ void battle_axe()
         ChangeColor('e');
         cout << "You draw your battle axe from your bag and feel like youll just hit the enemy a little harder\n";
         ChangeColor('c');
-        cout<<" + 3 attack \n";
+        cout << " + 3 attack \n";
     }
 }
 
@@ -191,7 +192,7 @@ void health_potion()
         ChangeColor('e');
         cout << "You drink the potion and feel like you can fight a little longer \n";
         ChangeColor('d');
-        cout<<" + 10 health\n";
+        cout << " + 10 health\n";
         if (players_health[1] > players_health[0]) {
             players_health[1] = players_health[0];
         }
@@ -242,6 +243,7 @@ int main() //first loop to keep the game going as long as at least one of them h
             pturn = false;
             eturn = true;
         }
+        //actions for the player
         while (pturn == true) {
             ChangeColor('a');
             cout << "You have the following actions: \n";
@@ -284,7 +286,7 @@ int main() //first loop to keep the game going as long as at least one of them h
                 pturn = false;
                 break;
             }
-            case 'i': {
+            case 'i': { //the player chooses an item
                 ChangeColor('a');
                 cout << "You open your bag and find the following items:\n";
                 cout << "\n";
@@ -302,48 +304,48 @@ int main() //first loop to keep the game going as long as at least one of them h
                 cin >> ch;
                 cout << "\n";
                 switch (ch[0]) {
-                    case 's': {
-                        if (has_speed == false) {
-                            ChangeColor('e');
-                            cout << "You already did this action!\n";
-                        }
-                        else {
-                            speed_potion();
-                            pturn = false;
-                        }
-                        break;
-                    }
-                    case 'a': {
-                        if (has_axe == false) {
-                            ChangeColor('e');
-                            cout << "You already did this action!\n";
-                        }
-                        else {
-                            battle_axe();
-                            pturn = false;
-                        }
-                        break;
-                    }
-                    case 'h': {
-                        if (has_potion == false) {
-                            ChangeColor('e');
-                            cout << "You already did this action!\n";
-                        }
-                        else {
-                            health_potion();
-                            pturn = false;
-                        }
-                        break;
-                    }
-                    case 'c': {
+                case 's': {
+                    if (has_speed == false) {
                         ChangeColor('e');
-                        cout << "You decide to leave them for later and face the enemy again\n";
-                        cout << "\n";
-                        break;
+                        cout << "You already did this action!\n";
                     }
-                 break;
-                 }
-            break;
+                    else {
+                        speed_potion();
+                        pturn = false;
+                    }
+                    break;
+                }
+                case 'a': {
+                    if (has_axe == false) {
+                        ChangeColor('e');
+                        cout << "You already did this action!\n";
+                    }
+                    else {
+                        battle_axe();
+                        pturn = false;
+                    }
+                    break;
+                }
+                case 'h': {
+                    if (has_potion == false) {
+                        ChangeColor('e');
+                        cout << "You already did this action!\n";
+                    }
+                    else {
+                        health_potion();
+                        pturn = false;
+                    }
+                    break;
+                }
+                case 'c': {
+                    ChangeColor('e');
+                    cout << "You decide to leave them for later and face the enemy again\n";
+                    cout << "\n";
+                    break;
+                }
+                        break;
+                }
+                break;
             }
             default: {
                 pturn = true;
@@ -352,8 +354,8 @@ int main() //first loop to keep the game going as long as at least one of them h
             }
             }
         }
-        while (eturn == true) {
-            int enemy_choice = rand() % 2;
+        while (eturn == true) { 
+            int enemy_choice = rand() % 2; // the enemy will choose to attack or defend at random
             if (enemy_choice == 1) {
                 ChangeColor('4');
                 cout << "The enemy rushes in to attack!\n";
