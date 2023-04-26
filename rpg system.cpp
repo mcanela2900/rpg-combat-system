@@ -341,7 +341,7 @@ int main() //first loop to keep the game going as long as at least one of them h
                         cout << "\n";
                         break;
                     }
-                break;
+                 break;
                  }
             break;
             }
