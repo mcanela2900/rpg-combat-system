@@ -291,7 +291,7 @@ int main() //first loop to keep the game going as long as at least one of them h
                 ChangeColor('9');
                 cout << "Speed potion: Increase your speed by 2\n";
                 ChangeColor('9');
-                cout << "Battle axe: Increase your attack by 3\n";
+                cout << "Axe: Increase your attack by 3\n";
                 ChangeColor('9');
                 cout << "Health potion: Increase your health by 50%, max 2 uses\n";
                 cout << "\n";
@@ -313,7 +313,7 @@ int main() //first loop to keep the game going as long as at least one of them h
                         }
                         break;
                     }
-                    case 'b': {
+                    case 'a': {
                         if (has_axe == false) {
                             ChangeColor('e');
                             cout << "You already did this action!\n";
@@ -341,9 +341,9 @@ int main() //first loop to keep the game going as long as at least one of them h
                         cout << "\n";
                         break;
                     }
-                 break;
+                break;
                  }
-             break;
+            break;
             }
             default: {
                 pturn = true;
