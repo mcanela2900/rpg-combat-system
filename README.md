@@ -34,10 +34,6 @@ A basic combat system using C++
 
      - Added color functions
 
-- 1.4.1
-
-     - (Planned) added sleep function
-
 ## License
 
 <img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
