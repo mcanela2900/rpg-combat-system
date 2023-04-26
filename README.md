@@ -1,2 +1,39 @@
-# rpg-combat-system
-A simple rpg combat system to use on text based games. This program allows the user to choose from a list of actions wich are: attack, defend, and items. Each of these actions afect what the character does in the game. When the user attacks it has a chance to do damage that ranges from its attack stat. The user also has the ability to defend to block as much damage as posible, but the user has to be mindful because there is an armour cap and once the cap is met the character takes full damage. There are also items the user can consume to increase their stats as the game progresses. It was a fun experience but it turned out to be  kind of chaotic because of our turbulent sence of urgency.
+# rpg-combat-system Ver 1.4
+A basic combat system using C++
+
+## How to use
+
+- a: Attack
+- d: Defend
+- i: View items
+
+## Version History
+
+- 1.0
+
+     - Added attack function
+
+- 1.1
+
+     - Added defense function
+     - Fixed/balanced attack function
+
+- 1.2
+
+     - All item functions created and added
+
+- 1.2.1
+
+     - Minor aesthetic fixes (added more couts)
+
+- 1.3
+
+     - Added armor mechanic
+
+- 1.4
+
+     - Added color functions
+
+- 1.4.1
+
+     - (Planned) added sleep function
