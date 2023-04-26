@@ -16,7 +16,7 @@ int enemy_speed[2] = {5, 5};
 int enemy_health[2] = {30, 30};
 
 //aditional initializations as to not repeat them in the loop
-bool gamestatehealth, pturn, eturn, has_defended, has_speed = true, has_axe = true, has_potion = true;
+bool gamestatehealth, pturn, eturn, has_defended = false, ehas_defended = false, has_speed = true, has_axe = true, has_potion = true;
 
 // this will be used later to determine wether the game is over or not
 void gamestate() {
@@ -35,6 +35,7 @@ void gamestate() {
         //else, the game continues
         else {
             gamestatehealth = true;
+            cout << "~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.~.";
         }
     }
 }
@@ -49,7 +50,28 @@ int diceroll() {
 int attack()
 {
     int dmg = rand() % players_attack[1] + 1;
-
+    int roll = diceroll();
+    if (roll == 20) {
+        dmg = dmg * 1.5;
+        cout << "critical hit!\n";
+    }
+    else
+        if (roll == 1) {
+            cout << "critical failure! attack missed\n";
+            dmg = 0;
+        }
+    if (ehas_defended) {
+        enemy_defense[1] -= dmg; // decrease damage by half if player defended
+        cout << "You've hit the enemy's armor, it has " << enemy_defense[1] << " durability remaining\n";
+        dmg -= enemy_defense[0] - enemy_defense[1];
+        ehas_defended = false; // reset has_defended for next turn
+    }
+    
+    if (dmg < 0) {
+        dmg = 0;
+        cout << "Your attack was successfully parried by the enemy\n";
+    }
+    
     return dmg;
 }
 
@@ -57,9 +79,21 @@ int eattack()
 {
     //this is the equation for damage from the enemy to the player
     int dmg = rand() % enemy_attack[1] + 1;
-    
+    int roll = diceroll();
+    if (roll == 20) {
+        dmg = dmg * 1.5;
+        cout << "critical hit!\n";
+    }
+    else
+        if (roll == 1) {
+            cout << "critical failure! enemy attack missed\n";
+            dmg = 0;
+        }
     if (has_defended) {
-        dmg -= rand() % players_defense[1] + 1; // decrease damage by half if player defended
+        players_defense[1] -= dmg;
+        dmg -= players_defense[0] - players_defense[1];
+        players_defense[0] = players_defense[1];
+        cout << "The enemy has hit your armor, it has " << players_defense[1] << " durability remaining\n";
         has_defended = false; // reset has_defended for next turn
     }
     
@@ -168,18 +202,7 @@ int main() //first loop to keep the game going as long as at least one of them h
             switch (input[0]) {
                 case 'a': {
                     cout << "You rush in to attack!\n";
-                    cout << "\n";
-                    int roll = diceroll();
                     int dmg = attack();
-                    if (roll == 20) {
-                        dmg = dmg * 1.5;
-                        cout << "critical hit!\n";
-                    }
-                    else
-                        if (roll == 1) {
-                            cout << "critical failure! attack missed\n";
-                            dmg = 0;
-                        }
                     if (enemy_health[1] < 0) {
                         enemy_health[1] = 0;
                     }
@@ -194,7 +217,6 @@ int main() //first loop to keep the game going as long as at least one of them h
                         pturn = true;
                         break;
                     }
-                    players_defense[1] += 2; // increase defense by 2 for the rest of the turn
                     cout << "You prepare to defend.\n";
                     has_defended = true;
                     pturn = false;
@@ -202,11 +224,15 @@ int main() //first loop to keep the game going as long as at least one of them h
                 }
                 case 'i': {
                     cout << "You open your bag and find the following items:\n";
+                    cout << "\n";
                     cout << "Speed potion: Increase your speed by 2\n";
                     cout << "Battle axe: Increase your attack by 3\n";
                     cout << "Health potion: Increase your health by 50%, max 2 uses\n";
+                    cout << "\n";
                     cout << "type the name of the item you wish to use. type 'c' to return\n";
+                    cout << "\n";
                     cin >> ch;
+                    cout << "\n"
                     switch (ch[0]) {
                         case 's': {
                             if (has_speed ==false) {
@@ -242,6 +268,7 @@ int main() //first loop to keep the game going as long as at least one of them h
                             cout << "You decide to leave them for later and face the enemy again\n";
                             break;
                         }
+                    break;
                     }
                 break;
                 }
@@ -253,24 +280,28 @@ int main() //first loop to keep the game going as long as at least one of them h
             }
         }
         while (eturn == true) {
-            cout << "The enemy rushes in to attack!\n";
-            int roll = diceroll();
-            int dmg = eattack();
-            if (roll == 20) {
-                dmg = dmg * 1.5;
-                cout << "critical hit!\n";
-            }
-            else
-                if (roll == 1) {
-                    cout << "critical failure! enemy attack missed\n";
-                    dmg = 0;
+            int enemy_choice = rand() % 2;
+            if (enemy_choice == 1) {
+                cout << "The enemy rushes in to attack!\n";
+                int dmg = eattack();
+                players_health[1] = players_health[1] - dmg;
+                if (players_health[1] < 0) {
+                    players_health[1] = 0;
                 }
-            players_health[1] = players_health[1] - dmg;
-            if (players_health[1] < 0) {
-                players_health[1] = 0;
+                cout << "You have " << players_health[1] << "/" << players_health[0] << "hp remaining\n";
+                eturn = false;
             }
-            cout << "You have " << players_health[1] << "/" << players_health[0] << "hp remaining\n";
-            eturn = false;
+            else 
+            {
+                if (ehas_defended) {
+                    eturn = true;
+                }
+                else {
+                    cout << "The enemy prepares to defend from your next attack!\n";
+                    ehas_defended = true;
+                    eturn = false;
+                }
+            }
         }
         gamestate();
     } while (gamestatehealth == true);
