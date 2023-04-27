@@ -81,10 +81,12 @@ int attack()
     int roll = diceroll();
     if (roll == 20) {
         dmg = dmg * 1.5;
+        ChangeColor('c');
         cout << "critical hit!\n";
     }
     else
         if (roll == 1) {
+            ChangeColor('4');
             cout << "critical failure! attack missed\n";
             dmg = 0;
         }
@@ -95,9 +97,11 @@ int attack()
                 if (enemy_defense[1] <= 0) {
                     enemy_defense[1] = 0;
                     edefense = false;
+                    ChangeColor('4');
                     cout << "The enemy's armor has been destroyed\n";
                 }
                 else {
+                    ChangeColor('4');
                     cout << "You've hit the enemy's armor, it has " << enemy_defense[1] << " durability remaining\n";
                 }
                 ehas_defended = false; // reset has_defended for next turn
@@ -105,9 +109,10 @@ int attack()
         }
     if (dmg < 0) {
         dmg = 0;
+        ChangeColor('1');
         cout << "Your attack was successfully parried by the enemy\n";
     }
-    
+
     return dmg;
 }
 
@@ -118,10 +123,12 @@ int eattack()
     int roll = diceroll();
     if (roll == 20) {
         dmg = dmg * 1.5;
+        ChangeColor('c');
         cout << "critical hit!\n";
     }
     else
         if (roll == 1) {
+            ChangeColor('4');
             cout << "critical failure! enemy attack missed\n";
             dmg = 0;
         }
@@ -133,18 +140,21 @@ int eattack()
                 if (players_defense[1] <= 0) {
                     players_defense[1] = 0;
                     defense = false;
+                    ChangeColor('c');
                     cout << "Your armor has been destroyed\n";
                 }
                 else {
-                cout << "The enemy has hit your armor, it has " << players_defense[1] << " durability remaining\n";
+                    ChangeColor('1');
+                    cout << "The enemy has hit your armor, it has " << players_defense[1] << " durability remaining\n";
                 }
                 has_defended = false; // reset has_defended for next turn
             }
     if (dmg < 0) {
         dmg = 0;
+        ChangeColor('3');
         cout << "Enemy's attack was successfully parried\n";
     }
-    
+
     return dmg;
 }
 
@@ -157,11 +167,16 @@ void speed_potion()
     speedp += 1;
     if (speedp == 2) {
         has_speed = false;
+        ChangeColor('e');
         cout << "You already drank the only speed potion you had!\n";
     }
     else {
-    players_speed[0] += 2;
-    cout << "You feel energized by the effect of the speed potion \n +2 speed \n";
+        players_speed[0] += 2;
+        ChangeColor('e');
+        cout << "You feel energized by the effect of the speed potion \n";
+        ChangeColor('3');
+        cout << " + 2 speed \n";
+
     }
 }
 
@@ -170,11 +185,15 @@ void battle_axe()
     axe += 1;
     if (axe == 2) {
         has_axe = false;
+        ChangeColor('e');
         cout << "You're already holding your axe!\n";
     }
     else {
-    players_attack[0-1] += 3;
-    cout << "You draw your battle axe from your bag and feel like youll just hit the enemy a little harder\n +3 attack \n";
+        players_attack[0 - 1] += 3;
+        ChangeColor('e');
+        cout << "You draw your battle axe from your bag and feel like youll just hit the enemy a little harder\n";
+        ChangeColor('c');
+        cout << " + 3 attack \n";
     }
 }
 
@@ -260,13 +279,16 @@ int main() //first loop to keep the game going as long as at least one of them h
             cout << "\n";
             switch (input[0]) {
             case 'a': {
+                ChangeColor('c');
                 cout << "You rush in to attack!\n";
                 int dmg = attack();
+                ChangeColor('c');
                 cout << "-" << dmg << "hp!\n";
                 enemy_health[1] = enemy_health[1] - dmg;
                 if (enemy_health[1] < 0) {
                     enemy_health[1] = 0;
                 }
+                ChangeColor('9');
                 cout << "enemy has " << enemy_health[1] << "/" << enemy_health[0] << "hp remaining\n";
                 pturn = false;
                 break;
@@ -274,16 +296,19 @@ int main() //first loop to keep the game going as long as at least one of them h
             case 'd': {
                 if (defense) {
                     if (has_defended) {
+                        ChangeColor('3');
                         cout << "You have already defended this turn.\n";
                         pturn = true;
                         break;
                     }
+                    ChangeColor('3');
                     cout << "You prepare to defend.\n";
                     has_defended = true;
                     pturn = false;
                     break;
                 }
                 else {
+                    ChangeColor('3');
                     cout << "Your armor is already broken\n";
                     cout << "\n";
                     pturn = true;
@@ -358,9 +383,10 @@ int main() //first loop to keep the game going as long as at least one of them h
             }
             }
         }
-        while (eturn == true) { 
+        while (eturn == true) {
             int enemy_choice = rand() % 2;
             if (enemy_choice == 1) {
+                ChangeColor('4');
                 cout << "The enemy rushes in to attack!\n";
                 int dmg = eattack();
                 cout << "-" << dmg << "hp!\n";
@@ -368,16 +394,18 @@ int main() //first loop to keep the game going as long as at least one of them h
                 if (players_health[1] < 0) {
                     players_health[1] = 0;
                 }
+                ChangeColor('2');
                 cout << "You have " << players_health[1] << "/" << players_health[0] << "hp remaining\n";
                 eturn = false;
             }
-            else 
+            else
             {
                 if (edefense) {
                     if (ehas_defended) {
                         eturn = true;
                     }
                     else {
+                        ChangeColor('3');
                         cout << "The enemy prepares to defend from your next attack!\n";
                         ehas_defended = true;
                         eturn = false;
